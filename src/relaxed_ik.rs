@@ -34,6 +34,17 @@ impl RelaxedIK {
         self.vars.reset( x.clone());
     }
 
+    pub fn update_torso_joint_limits(&mut self, x: Vec<f64>) {
+        // for each item in lower and upper joint limits, update the value
+        let size = self.vars.robot.lower_joint_limits.len();
+        for i in 0..size {
+            self.vars.robot.lower_joint_limits[i] = x[i];
+            self.vars.robot.upper_joint_limits[i] = x[i+size];
+        }
+//         println!("Updated torso joint limits lower: {:?}", self.vars.robot.lower_joint_limits);
+//         println!("Updated torso joint limits upper: {:?}", self.vars.robot.upper_joint_limits);
+    }
+
     pub fn solve(&mut self) -> Vec<f64> {
         let mut out_x = self.vars.xopt.clone();
 

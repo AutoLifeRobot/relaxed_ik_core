@@ -39,6 +39,18 @@ pub unsafe extern "C" fn reset(ptr: *mut RelaxedIK, joint_state: *const c_double
 }
 
 #[no_mangle]
+pub unsafe extern "C" fn update_torso_joint_limits(ptr: *mut RelaxedIK, joint_state: *const c_double, joint_state_length: c_int) {
+    let relaxed_ik = unsafe {
+        assert!(!ptr.is_null());
+        &mut *ptr
+    };
+
+    let x_slice: &[c_double] = std::slice::from_raw_parts(joint_state, joint_state_length as usize);
+    let x_vec = x_slice.to_vec();
+    relaxed_ik.update_torso_joint_limits(x_vec);
+}
+
+#[no_mangle]
 pub unsafe extern "C" fn solve_position(ptr: *mut RelaxedIK, pos_goals: *const c_double, pos_length: c_int, 
     quat_goals: *const c_double, quat_length: c_int,
     tolerance: *const c_double, tolerance_length: c_int) -> Opt {

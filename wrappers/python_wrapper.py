@@ -80,5 +80,11 @@ class RelaxedIKRust:
             js_arr[i] = joint_state[i]
         lib.reset(self.obj, js_arr, len(js_arr))
 
+    def update_torso_joint_limits(self, joint_state):
+        js_arr = (ctypes.c_double * len(joint_state))()
+        for i in range(len(joint_state)):
+            js_arr[i] = joint_state[i]
+        lib.update_torso_joint_limits(self.obj, js_arr, len(js_arr))
+
 if __name__ == '__main__':
     pass
