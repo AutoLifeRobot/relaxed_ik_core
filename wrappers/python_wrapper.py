@@ -60,11 +60,11 @@ class RelaxedIKRust:
         ik_solution = self.solve_position(
             positions, orientations, tolerances)
 
-        min_waist_angle = min(ik_solution[0], ik_solution[8])
-        limits[0] = min_waist_angle - 0.001
-        limits[8] = min_waist_angle - 0.001
-        limits[16] = min_waist_angle + 0.001
-        limits[24] = min_waist_angle + 0.001
+        min_waist_angle = min(ik_solution[2], ik_solution[12])
+        limits[2] = min_waist_angle - 0.001
+        limits[12] = min_waist_angle - 0.001
+        limits[22] = min_waist_angle + 0.001
+        limits[32] = min_waist_angle + 0.001
         self.update_torso_joint_limits(limits)
 
         ik_solution = self.solve_position(
