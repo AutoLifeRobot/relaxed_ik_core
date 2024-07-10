@@ -54,6 +54,22 @@ class RelaxedIKRust:
             tole_arr[i] = tolerances[i]
         xopt = lib.solve_position(self.obj, pos_arr, len(pos_arr), quat_arr, len(quat_arr), tole_arr, len(tole_arr))
         return xopt.data[:xopt.length]
+
+    def solve_position_with_waist(self, positions, orientations, tolerances, limits):
+        self.update_torso_joint_limits(limits)
+        ik_solution = self.solve_position(
+            positions, orientations, tolerances)
+
+        min_waist_angle = min(ik_solution[2], ik_solution[12])
+        limits[2] = min_waist_angle - 0.001
+        limits[12] = min_waist_angle - 0.001
+        limits[22] = min_waist_angle + 0.001
+        limits[32] = min_waist_angle + 0.001
+        self.update_torso_joint_limits(limits)
+
+        ik_solution = self.solve_position(
+            positions, orientations, tolerances)
+        return ik_solution
     
     def solve_velocity(self, linear_velocities, angular_velocities, tolerances):
         '''
