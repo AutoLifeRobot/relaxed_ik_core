@@ -103,7 +103,25 @@ class RelaxedIKRust:
         lib.update_torso_joint_limits(self.obj, js_arr, len(js_arr))
 
 if __name__ == '__main__':
+    import numpy as np
+
     os.chdir("..")
     setting_file_path = '/home/summer/Documents/Github/autolife/relaxed_ik_core/configs/robot_v0_5.yaml'
     relaxed_ik = RelaxedIKRust(setting_file_path)
-    # robot = Robot(setting_file_path)
+
+    poses = [0.2, 0.08, 0.672, -0.32, -0.36, -0.6, 0.62,
+             -0.2, 0.07, 0.666, -0.41, -0.26, -0.64, 0.59]
+    positions = []
+    orientations = []
+    tolerances = [0.08, 0.08, 0.08, 0., 0., 0.,
+                  0.08, 0.08, 0.08, 0., 0., 0.]
+
+    positions.extend(poses[0:3])
+    orientations.extend(poses[3:7])
+
+    positions.extend(poses[7:10])
+    orientations.extend(poses[10:14])
+
+    ik_solution = relaxed_ik.solve_position(positions, orientations, tolerances)
+    print("ik_solution", np.rad2deg(ik_solution[:8]))
+    print("ik_solution", np.rad2deg(ik_solution[8:]))
