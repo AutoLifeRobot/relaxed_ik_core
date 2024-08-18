@@ -103,4 +103,7 @@ class RelaxedIKRust:
         lib.update_torso_joint_limits(self.obj, js_arr, len(js_arr))
 
 if __name__ == '__main__':
-    pass
+    os.chdir("..")
+    setting_file_path = '/home/summer/Documents/Github/autolife/relaxed_ik_core/configs/robot_v0_5.yaml'
+    relaxed_ik = RelaxedIKRust(setting_file_path)
+    # robot = Robot(setting_file_path)
