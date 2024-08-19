@@ -20,18 +20,20 @@ lib.solve_position.restype = Opt
 lib.solve_velocity.argtypes = [ctypes.POINTER(RelaxedIKS), ctypes.POINTER(ctypes.c_double), ctypes.c_int, ctypes.POINTER(ctypes.c_double), ctypes.c_int, ctypes.POINTER(ctypes.c_double), ctypes.c_int]
 lib.solve_velocity.restype = Opt
 lib.reset.argtypes = [ctypes.POINTER(RelaxedIKS)]
+lib.get_torso_joint_limits.argtypes = [ctypes.POINTER(RelaxedIKS)]  # Assuming RelaxedIK is properly defined
+lib.get_torso_joint_limits.restype = Opt
 
 class RelaxedIKRust:
-    def __init__(self, setting_file_path = None):
+    def __init__(self, robot_version):
         '''
         setting_file_path (string): path to the setting file
                                     if no path is given, the default setting file will be used
                                     /configs/settings.yaml
         '''
-        if setting_file_path is None:
-            self.obj = lib.relaxed_ik_new(ctypes.c_char_p())
-        else:
-            self.obj = lib.relaxed_ik_new(ctypes.c_char_p(setting_file_path.encode('utf-8')))
+        my_path = os.path.abspath(os.path.dirname(__file__))
+        os.chdir(f"{my_path}/..")
+        setting_file_path = f'{my_path}/../configs/{robot_version}.yaml'
+        self.obj = lib.relaxed_ik_new(ctypes.c_char_p(setting_file_path.encode('utf-8')))
     
     def __exit__(self, exc_type, exc_value, traceback):
         lib.relaxed_ik_free(self.obj)
@@ -105,9 +107,13 @@ class RelaxedIKRust:
 if __name__ == '__main__':
     import numpy as np
 
-    os.chdir("..")
-    setting_file_path = '/home/summer/Documents/Github/autolife/relaxed_ik_core/configs/robot_v0_5.yaml'
-    relaxed_ik = RelaxedIKRust(setting_file_path)
+    relaxed_ik = RelaxedIKRust("robot_v0_5")
+    xopt = lib.get_torso_joint_limits(relaxed_ik.obj)
+    limits = xopt.data[:xopt.length]
+    lower = limits[:int(len(limits)/2)]
+    upper = limits[int(len(limits)/2):]
+    print("lower", np.rad2deg(lower))
+    print("upper", np.rad2deg(upper))
 
     poses = [0.2, 0.08, 0.672, -0.32, -0.36, -0.6, 0.62,
              -0.2, 0.07, 0.666, -0.41, -0.26, -0.64, 0.59]

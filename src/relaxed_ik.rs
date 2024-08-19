@@ -45,6 +45,18 @@ impl RelaxedIK {
 //         println!("Updated torso joint limits upper: {:?}", self.vars.robot.upper_joint_limits);
     }
 
+    pub fn get_torso_joint_limits(&mut self) -> (Vec<f64>, Vec<f64>) {
+        let mut lower = vec![];
+        let mut upper = vec![];
+        for i in 0..self.vars.robot.lower_joint_limits.len() {
+            lower.push(self.vars.robot.lower_joint_limits[i]);
+            upper.push(self.vars.robot.upper_joint_limits[i]);
+        }
+
+        // return lower and upper joint limits
+        (lower, upper)
+    }
+
     pub fn solve(&mut self) -> Vec<f64> {
         let mut out_x = self.vars.xopt.clone();
 

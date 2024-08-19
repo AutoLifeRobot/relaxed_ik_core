@@ -50,6 +50,30 @@ pub unsafe extern "C" fn update_torso_joint_limits(ptr: *mut RelaxedIK, joint_st
     relaxed_ik.update_torso_joint_limits(x_vec);
 }
 
+// get_torso_joint_limits
+#[no_mangle]
+pub unsafe extern "C" fn get_torso_joint_limits(ptr: *mut RelaxedIK) -> Opt {
+    let relaxed_ik = unsafe {
+        assert!(!ptr.is_null());
+        &mut *ptr
+    };
+
+    let (mut lower, mut upper) = relaxed_ik.get_torso_joint_limits();
+
+    //print lower and upper joint limits
+    // println!("Current torso joint limits lower wrapper rs: {:?}", lower);
+    // println!("Current torso joint limits upper wrapper rs: {:?}", upper);
+
+    // merge lower and upper joint limits
+    lower.append(&mut upper);
+
+    //return lower and upper joint limits
+    let ptr = lower.as_ptr();
+    let len = lower.len();
+    std::mem::forget(lower);
+    Opt {data: ptr, length: len as c_int}
+}
+
 #[no_mangle]
 pub unsafe extern "C" fn solve_position(ptr: *mut RelaxedIK, pos_goals: *const c_double, pos_length: c_int, 
     quat_goals: *const c_double, quat_length: c_int,
