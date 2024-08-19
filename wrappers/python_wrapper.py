@@ -104,14 +104,18 @@ class RelaxedIKRust:
             js_arr[i] = joint_state[i]
         lib.update_torso_joint_limits(self.obj, js_arr, len(js_arr))
 
+    def get_torso_joint_limits(self):
+        xopt = lib.get_torso_joint_limits(self.obj)
+        limits = xopt.data[:xopt.length]
+        lower = limits[:int(len(limits)/2)]
+        upper = limits[int(len(limits)/2):]
+        return tuple(lower), tuple(upper)
+
 if __name__ == '__main__':
     import numpy as np
 
     relaxed_ik = RelaxedIKRust("robot_v0_5")
-    xopt = lib.get_torso_joint_limits(relaxed_ik.obj)
-    limits = xopt.data[:xopt.length]
-    lower = limits[:int(len(limits)/2)]
-    upper = limits[int(len(limits)/2):]
+    lower, upper = relaxed_ik.get_torso_joint_limits()
     print("lower", np.rad2deg(lower))
     print("upper", np.rad2deg(upper))
 
