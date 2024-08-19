@@ -30,10 +30,15 @@ class RelaxedIKRust:
                                     if no path is given, the default setting file will be used
                                     /configs/settings.yaml
         '''
+        # record original directory
+        ori_dict = os.getcwd()
         my_path = os.path.abspath(os.path.dirname(__file__))
         os.chdir(f"{my_path}/..")
         setting_file_path = f'{my_path}/../configs/{robot_version}.yaml'
         self.obj = lib.relaxed_ik_new(ctypes.c_char_p(setting_file_path.encode('utf-8')))
+
+        # cd back to the original directory
+        os.chdir(ori_dict)
     
     def __exit__(self, exc_type, exc_value, traceback):
         lib.relaxed_ik_free(self.obj)
