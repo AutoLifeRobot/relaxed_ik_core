@@ -119,7 +119,7 @@ class RelaxedIKRust:
 if __name__ == '__main__':
     import numpy as np
 
-    relaxed_ik = RelaxedIKRust("robot_v0_5")
+    relaxed_ik = RelaxedIKRust("robot_v0_51")
     lower, upper = relaxed_ik.get_torso_joint_limits()
     print("lower", np.rad2deg(lower))
     print("upper", np.rad2deg(upper))

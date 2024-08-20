@@ -1,0 +1,34 @@
+urdf: ../../../RobotSimulation/descriptions/autolife_robot/urdfs/robot_v0_51.urdf
+link_radius: 0.05
+base_links:
+  - link_ground_vehicle
+  - link_ground_vehicle
+ee_links:
+  - link_left_gripper
+  - link_right_gripper
+starting_config:
+  [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+  ]
+obstacles:
