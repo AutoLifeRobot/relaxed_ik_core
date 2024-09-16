@@ -2,6 +2,7 @@
 
 import ctypes
 import os
+import platform
 
 class Opt(ctypes.Structure):
     _fields_ = [("data", ctypes.POINTER(ctypes.c_double)), ("length", ctypes.c_int)]
@@ -10,7 +11,10 @@ class RelaxedIKS(ctypes.Structure):
     pass
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
-lib = ctypes.cdll.LoadLibrary(dir_path + '/../target/debug/librelaxed_ik_lib.so')
+if platform.system() == 'Windows':
+    lib = ctypes.cdll.LoadLibrary(dir_path + '/../target/debug/relaxed_ik_lib.dll')
+else:
+    lib = ctypes.cdll.LoadLibrary(dir_path + '/../target/debug/librelaxed_ik_lib.so')
 
 lib.relaxed_ik_new.restype = ctypes.POINTER(RelaxedIKS)
 lib.solve.argtypes = [ctypes.POINTER(RelaxedIKS), ctypes.POINTER(ctypes.c_double), ctypes.c_int, ctypes.POINTER(ctypes.c_double), ctypes.c_int, ctypes.POINTER(ctypes.c_double)]
