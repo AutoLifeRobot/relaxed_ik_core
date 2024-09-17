@@ -3,6 +3,7 @@
 import ctypes
 import os
 import platform
+import sys
 
 class Opt(ctypes.Structure):
     _fields_ = [("data", ctypes.POINTER(ctypes.c_double)), ("length", ctypes.c_int)]
@@ -13,6 +14,8 @@ class RelaxedIKS(ctypes.Structure):
 dir_path = os.path.dirname(os.path.realpath(__file__))
 if platform.system() == 'Windows':
     lib = ctypes.cdll.LoadLibrary(dir_path + '/../target/debug/relaxed_ik_lib.dll')
+elif sys.platform == 'darwin':  # macOS
+    lib = ctypes.cdll.LoadLibrary(os.path.join(dir_path, '../target/debug/librelaxed_ik_lib.dylib'))
 else:
     lib = ctypes.cdll.LoadLibrary(dir_path + '/../target/debug/librelaxed_ik_lib.so')
 
